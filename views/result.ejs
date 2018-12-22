@@ -1,0 +1,51 @@
+<html>
+    <head>
+        <title>Jury</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="jumbotron" style="text-align: center;margin-top:40px;min-height: 90vh;padding: 20vh;">
+            <h1 style="margin: 40px">Agreement Status</h1>
+            <label>Name:</label>
+            <strong><%= data[0] %></strong>
+            <br><br>
+            <label>Time Until Payement:</label>
+            <strong><%= data[1] %></strong>
+            <br><br>
+            <label>Cost of Agreement(wei):</label>
+            <strong><%= data[2] %></strong>
+            <br><br>
+            <% if(data[3] == 4) { %>
+                <p>Agreement Setteled</p>
+            <%}%>
+            <% if(data[4] == 1 && data[3] == 0) { %>
+                <a  href= <%= "/solidity/acceptAgreement/"+id %> ><button class="btn btn-primary">Accept Agreement</button></a>
+            <%}%>
+    
+            <% if(data[4] == 1 && data[3] == 1) { %>
+                <a  href= <%= "/solidity/claimCompletion/"+id %> ><button class="btn btn-primary">Claim Completion</button></a>
+            <%}%>
+    
+            <% if(data[4] == 1 && data[3] == 2) { %>
+                <a  href= <%= "/solidity/disagreement/"+id %> ><button class="btn btn-primary">Disagreement</button></a>
+            <%}%>
+    
+            <% if(data[3] == 3) { %>
+                <p>Agreement Passed to Jury</p>
+            <%}%>
+    
+            <% if(data[4] == 2 && (data[3] == 1 || data[3] == 2 )) { %>
+                <a  class="btn btn-primary" href= <%= "/solidity/disagreement/"+id %> ><button>Disagreement</button></a>
+                <a class="btn btn-primary" href= <%= "/solidity/payout/"+id %> ><button>Payout</button></a>
+            <%}%>
+    
+            <% if(data[4] == 2 && data[3] == 0) { %>
+                <p>Request made to service provider</p>
+            <%}%>
+
+        <a class="btn btn-primary" href="/dashboard">To Dashboard</a>
+    </body>
+</html>

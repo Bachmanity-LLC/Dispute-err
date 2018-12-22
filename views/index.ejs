@@ -1,0 +1,48 @@
+<html>
+    <head>
+        <title>Disput-err</title>
+    <!-- Compiled and minified CSS -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"> -->
+
+    <!-- Compiled and minified JavaScript -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script> -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.bundle.min.js" integrity="sha384-zDnhMsjVZfS3hiP7oCBRmfjkQC4fzxVxFhBx8Hkz2aZX8gEvA/jsP3eXRCvzTofP" crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <div class="container">
+            <div  class="jumbotron" style="text-align: center;margin-top:40px;min-height: 90vh;border: 3px solid black">
+            <h1 style="padding: 30px;">Add dispute</h1>
+            <form class="col s12" action="/solidity/addAgreement" method="post">
+              <div class="row" style="padding: 20px;">
+                <div class="input-field col s12">
+                    <label for="address">Address:</label>
+                  <input placeholder="Address" id="address" type="text" class="validate" name="address">
+                </div>
+              </div>
+              <div class="row" style="padding: 20px;">
+                <div class="input-field col s12">
+                    <label for="name">Name:</label>
+                  <input placeholder="Name" id="name" type="text" class="validate" name="name">
+                </div>
+              </div>
+              <div class="row" style="padding: 20px;">
+                <div class="input-field col s12">
+                    <label for="time">Time:</label>
+                  <input placeholder="Time" id="time" type="number" class="validate" name="time">
+                </div>
+              </div>
+              <div class="row" style="padding: 20px;">
+                <div class="input-field col s12">
+                    <label for="value">Value:</label>
+                  <input placeholder="Value in wei" id="value" type="number" class="validate" name="value">
+                </div>
+              </div>
+              <br><br>
+              <button class="btn btn-primary" type="Submit">Add Agreement</button>
+            </form>
+          </div>
+          </div>
+    </body>
+</html>
