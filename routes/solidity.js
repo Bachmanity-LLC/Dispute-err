@@ -5,72 +5,13 @@ var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 
-var client = "0x117c9059f14d913f154308bcd466696956ed1135";
-var service_provider = "0x21472396575c571325283e78b1cdfcef8e72beef";
-var arbitrater_one = "0xbd1e0ee3728f076e4e7b2894ccbd173e112bfd37";
-var arbitrator_two = "0x4813dbf8fe96bd81d7e97e646d37fe3536e6be3d";
+var client = "0xf3220af994666ca0192e4b041eb41cdb2d912a4d";
+var service_provider = "0x6985811e7d28c9417693f2a73450b980838ffca7";
+var arbitrater_one = "0x7e1b91892f2f24e2226b2330787352dca949cb62";
+var arbitrater_two = "0xcdd447a2d10cb780f36f671dfb59b4cfb39164af";
 
 var disputeContract = new web3.eth.Contract(
     [
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_id",
-                    "type": "uint256"
-                }
-            ],
-            "name": "accept_agreement",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_service_provider",
-                    "type": "address"
-                },
-                {
-                    "name": "_name",
-                    "type": "string"
-                },
-                {
-                    "name": "_max_time",
-                    "type": "uint256"
-                }
-            ],
-            "name": "add_agreement",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "payable": true,
-            "stateMutability": "payable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_id",
-                    "type": "uint256"
-                },
-                {
-                    "name": "_for",
-                    "type": "bool"
-                }
-            ],
-            "name": "arbitration",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
         {
             "constant": false,
             "inputs": [
@@ -93,7 +34,7 @@ var disputeContract = new web3.eth.Contract(
                     "type": "uint256"
                 }
             ],
-            "name": "claim_completition",
+            "name": "create_dispute",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
@@ -105,12 +46,99 @@ var disputeContract = new web3.eth.Contract(
                 {
                     "name": "_id",
                     "type": "uint256"
+                },
+                {
+                    "name": "_for",
+                    "type": "uint256"
                 }
             ],
-            "name": "create_dispute",
+            "name": "arbitration",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "result_out",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "address_to_solved",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "current_disputes",
+            "outputs": [
+                {
+                    "name": "_id",
+                    "type": "uint256"
+                },
+                {
+                    "name": "open",
+                    "type": "bool"
+                },
+                {
+                    "name": "weight_for",
+                    "type": "uint256"
+                },
+                {
+                    "name": "weight_against",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "total_weight",
+            "outputs": [
+                {
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "payable": false,
+            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -135,49 +163,10 @@ var disputeContract = new web3.eth.Contract(
                     "type": "uint256"
                 }
             ],
-            "name": "go_for_disagreement",
+            "name": "accept_agreement",
             "outputs": [],
             "payable": false,
             "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "constant": false,
-            "inputs": [
-                {
-                    "name": "_id",
-                    "type": "uint256"
-                }
-            ],
-            "name": "payout",
-            "outputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "function"
-        },
-        {
-            "inputs": [],
-            "payable": false,
-            "stateMutability": "nonpayable",
-            "type": "constructor"
-        },
-        {
-            "constant": true,
-            "inputs": [
-                {
-                    "name": "",
-                    "type": "address"
-                }
-            ],
-            "name": "address_to_weight",
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
             "type": "function"
         },
         {
@@ -236,34 +225,30 @@ var disputeContract = new web3.eth.Contract(
             "type": "function"
         },
         {
-            "constant": true,
+            "constant": false,
             "inputs": [
+                {
+                    "name": "_service_provider",
+                    "type": "address"
+                },
+                {
+                    "name": "_name",
+                    "type": "string"
+                },
+                {
+                    "name": "_max_time",
+                    "type": "uint256"
+                }
+            ],
+            "name": "add_agreement",
+            "outputs": [
                 {
                     "name": "",
                     "type": "uint256"
                 }
             ],
-            "name": "current_disputes",
-            "outputs": [
-                {
-                    "name": "_id",
-                    "type": "uint256"
-                },
-                {
-                    "name": "open",
-                    "type": "bool"
-                },
-                {
-                    "name": "weight_for",
-                    "type": "uint256"
-                },
-                {
-                    "name": "weight_against",
-                    "type": "uint256"
-                }
-            ],
-            "payable": false,
-            "stateMutability": "view",
+            "payable": true,
+            "stateMutability": "payable",
             "type": "function"
         },
         {
@@ -302,14 +287,37 @@ var disputeContract = new web3.eth.Contract(
             "type": "function"
         },
         {
-            "constant": true,
+            "constant": false,
             "inputs": [
                 {
                     "name": "_id",
                     "type": "uint256"
                 }
             ],
-            "name": "result_out",
+            "name": "claim_completition",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "go_for_disagreement",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "constant": true,
+            "inputs": [],
+            "name": "return_id",
             "outputs": [
                 {
                     "name": "",
@@ -321,9 +329,23 @@ var disputeContract = new web3.eth.Contract(
             "type": "function"
         },
         {
+            "constant": false,
+            "inputs": [
+                {
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "payout",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
             "constant": true,
             "inputs": [],
-            "name": "return_id",
+            "name": "uid",
             "outputs": [
                 {
                     "name": "",
@@ -350,8 +372,13 @@ var disputeContract = new web3.eth.Contract(
         },
         {
             "constant": true,
-            "inputs": [],
-            "name": "total_weight",
+            "inputs": [
+                {
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "address_to_weight",
             "outputs": [
                 {
                     "name": "",
@@ -361,20 +388,26 @@ var disputeContract = new web3.eth.Contract(
             "payable": false,
             "stateMutability": "view",
             "type": "function"
+        },
+        {
+            "inputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "constructor"
         }
-    ]    
+    ]
 );
 
-disputeContract.options.address = "0x9ff60280df07616dea69d4c276c8ac74c46fdda0";
+disputeContract.options.address = "0x5e41e77bfaecc336e0bfb2e9324d16cd1ab510e1";
 
 
 router.post('/addAgreement', function(req, res, next) {
-    console.log(web3.eth.accounts);
+    //console.log(web3.eth.accounts[0]);
     var address = req.body.address;
     var name = req.body.name;
     var time = parseInt(req.body.time);
     var value = parseInt(req.body.value);
-
+    console.log(address," ",name," ",time," ",value);
     // ADD AGREEMENT -
     disputeContract.methods.add_agreement(address, name, time).send({from:client, gas: 4700000,value:value})
     .then((e) => {    
@@ -397,7 +430,7 @@ router.post('/addAgreement', function(req, res, next) {
 router.post('/getAgreement', function(req, res, next){
 
     var id = parseInt(req.body.ident);
-    disputeContract.methods.get_agreement(id).call({from:client, gas: 4700000})
+    disputeContract.methods.get_agreement(id).call({from:service_provider, gas: 4700000})
     .then((e) => {
         console.log(e);
         res.render("result",{id:id,data:e});
@@ -486,30 +519,25 @@ router.get("/payout/:id", function(req,res,next){
 
 router.get("/vote/:id/:pos", function(req, res, next){
     var id = parseInt(req.params.id);
-    var decision;
-
-    if (req.params.pos == "0"){
-        decision = false;
-    }else{
-        decision = true;
-    }
+    var decision = parseInt(req.params.pos);
 
     console.log(id);
     console.log(decision);
 
-    // disputeContract.methods.arbitration(id,decision).send({from:arbitrater_one, gas: 4700000})
-    // .then((e)=>{
-    //   console.log(e); 
-    // })
-    // .catch((e)=>{
-    //   console.log(e);
-    // })
-    res.redirect("/solidity/result/"+id);
+    disputeContract.methods.arbitration(id,decision).send({from:arbitrater_two, gas: 4700000})
+    .then((e)=>{
+      console.log(e);
+      console.log("#############");
+      res.redirect("/solidity/result/"+id); 
+    })
+    .catch((e)=>{
+      console.log(e);
+    })
 })
 
 router.get('/arbitration', function(req, res, next){
     console.log("Aribter");
-    disputeContract.methods.get_next_dispute().call({from:arbitrater_one, gas: 4700000})
+    disputeContract.methods.get_next_dispute().call({from:arbitrater_two, gas: 4700000})
     .then((e)=>{
       console.log(e);
       res.render("arbitration",{id:e});
@@ -523,7 +551,7 @@ router.get('/result/:id', function(req, res, next){
     //console.log("Aribter");
     var id = parseInt(req.params.id);
     console.log("+++++++++++",id);
-    disputeContract.methods.result_out(id).call({from:arbitrater_one, gas: 4700000})
+    disputeContract.methods.result_out(id).call({from:arbitrater_two, gas: 4700000})
     .then((e)=>{
       console.log(e);
       if(e==0)
