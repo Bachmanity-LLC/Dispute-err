@@ -409,16 +409,10 @@ router.post('/addAgreement', function(req, res, next) {
     var value = parseInt(req.body.value);
     console.log(address," ",name," ",time," ",value);
     // ADD AGREEMENT -
-    disputeContract.methods.add_agreement(address, name, time).send({from:client, gas: 4700000,value:value})
-    .then((e) => {    
-        disputeContract.methods.return_id().call({from:client, gas: 4700000})
-        .then((e) => {
-            e-=1;
-            res.render("pageCreated",{data:e});
-        })
-        .catch((e) => {
-            console.log(e);
-        })
+    disputeContract.methods.add_agreement(address, name, time).call({from:client, gas: 4700000,value:value})
+    .then((e) => {
+        e-=1;
+        res.render("pageCreated",{data:e});
     })
     .catch((e) => {
         console.log("XXXXXXXXXXXXXXX");

@@ -2,9 +2,9 @@ pragma solidity ^0.4.22;
 
 contract Dispute{
     
-    uint public total_weight;
-    uint public uid;
-    uint public test;
+    uint total_weight;
+    uint uid;
+    uint test;
     
     struct Agreement {
         address client;
@@ -28,53 +28,41 @@ contract Dispute{
         address[] list_against;
     }
     
-    Agreement[] public all_agreement;
-    disputed[] public current_disputes;
-    mapping (address => uint) public address_to_weight;
-    mapping (address => uint) public address_to_solved;
-    
-
-    constructor() public {
-        total_weight = 0;
-        // address client = 0xc8e46C43AC26bA070aD0E5BB493831A9e249E964;
-        // address service = 0x3cB4643Fa00D4b8ca6DBf52A762076e956884060;
-        // all_agreement.push(Agreement(client,service,true,"boring",true,true,true,now,1200,10000000000));
-        // current_disputes.push(disputed(0,true,0,0,new address[](0),new address[](0)));
-    }
+    Agreement[] all_agreement;
+    disputed[] current_disputes;
+    mapping (address => uint) address_to_weight;
+    mapping (address => uint) address_to_solved;
 
     function add_agreement(address _service_provider,string memory _name,uint _max_time) public payable returns(uint){
         uint claimed_time = now;
         Agreement memory agreement = Agreement(msg.sender,_service_provider,false,_name,true,false,false,claimed_time,_max_time,msg.value);
         all_agreement.push(agreement);
-    }
-    
-    function return_id() external view returns(uint){
         return all_agreement.length;
     }
     
     function accept_agreement(uint _id) public onlyServer(_id){
-        all_agreement[_id].accepted=true;
+        all_agreement[_id].accepted = true;
     }
     
     function claim_completition(uint _id) public onlyServer(_id){
-        all_agreement[_id].claimed=true;
-        all_agreement[_id].claimed_time=now;
+        all_agreement[_id].claimed = true;
+        all_agreement[_id].claimed_time = now;
     }
     
-    function create_dispute(uint _id) public{
+    function create_dispute(uint _id) private {
         disputed memory dispute = disputed(_id,true,0,0,new address[](0),new address[](0));
         current_disputes.push(dispute);
     }
     
-    function go_for_disagreement(uint _id) public{
+    function go_for_disagreement(uint _id) public {
         if(msg.sender==all_agreement[_id].client){
-            all_agreement[_id].disagreement=true;
+            all_agreement[_id].disagreement = true;
             create_dispute(_id);
         }
         if(msg.sender==all_agreement[_id].service_provider){
             if(all_agreement[_id].claimed==true){
                 if(all_agreement[_id].claimed_time+all_agreement[_id].max_time<now){
-                    all_agreement[_id].disagreement=true;
+                    all_agreement[_id].disagreement = true;
                     create_dispute(_id);
                 }
             }
@@ -89,7 +77,7 @@ contract Dispute{
         all_agreement[_id].status = false;
     }
     
-    function check_max(uint _id) public{
+    function check_max(uint _id) private {
         uid = current_disputes[_id]._id;
         uint amount = all_agreement[uid].value;
         uint sum = 0;
@@ -97,10 +85,10 @@ contract Dispute{
         {
             address[] memory addresses = current_disputes[_id].list_against;
             uint len = addresses.length;
-            for(uint i=0;i<len;i++)
+            for(uint i = 0;i<len;i++)
             {
                 uint weight = address_to_weight[addresses[i]];
-                address_to_weight[addresses[i]]+= 25;
+                address_to_weight[addresses[i]] += 25;
                 uint incentive = uint(amount*weight/(20*total_weight));
                 addresses[i].transfer(incentive);
                 sum += incentive;
@@ -114,16 +102,16 @@ contract Dispute{
         }
         if(current_disputes[_id].weight_against*2 > total_weight)
         {
-            address[] memory addresses = current_disputes[_id].list_against;
-            uint len = addresses.length;
-            for(uint i=0;i<len;i++)
+            address[] memory addressess = current_disputes[_id].list_against;
+            uint lens = addressess.length;
+            for(uint j = 0;j < lens;j++)
             {
-                uint weight = address_to_weight[addresses[i]];
-                address_to_weight[addresses[i]]+= 25;
-                uint incentive = uint(amount*weight/(20*total_weight));
-                addresses[i].transfer(incentive);
-                sum += incentive;
-                weight += 25;
+                uint weigt = address_to_weight[addressess[j]];
+                address_to_weight[addressess[j]] += 25;
+                uint incentives = uint(amount*weigt/(20*total_weight));
+                addressess[j].transfer(incentives);
+                sum += incentives;
+                weigt += 25;
                 total_weight += 25;
             }
             amount -= sum;
@@ -136,17 +124,17 @@ contract Dispute{
     function arbitration(uint _id,uint _for) public{
         address arbitrator = msg.sender;
         if(address_to_weight[arbitrator]==0){
-             address_to_weight[arbitrator]=100;
-             total_weight+=100;
+            address_to_weight[arbitrator] = 100;
+            total_weight += 100;
         }
         if(_for == 1)
         {
-            current_disputes[_id].weight_for+=address_to_weight[arbitrator];
+            current_disputes[_id].weight_for += address_to_weight[arbitrator];
             current_disputes[_id].list_for.push(arbitrator);
         }
         else
         {
-            current_disputes[_id].weight_against+=address_to_weight[arbitrator];
+            current_disputes[_id].weight_against += address_to_weight[arbitrator];
             current_disputes[_id].list_against.push(arbitrator);
         }
         address_to_solved[arbitrator] = _id+1;
@@ -156,12 +144,12 @@ contract Dispute{
     function get_next_dispute() public returns(uint){
         address arbitrator = msg.sender;
         test = address_to_solved[arbitrator];
-        for (uint i=test; i<current_disputes.length; i++) {
+        for (uint i = test; i<current_disputes.length; i++) {
             if(current_disputes[i].open==false)
                 continue;
             else
             {
-                address_to_solved[arbitrator]=i;
+                address_to_solved[arbitrator] = i;
                 return i;
             }
         }
